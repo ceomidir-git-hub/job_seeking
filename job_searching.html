@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>구인공고 검색</title>
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      min-height:100dvh;
+      background:#f4f6f8;
+      color:#1f2937;
+      font-family:"Malgun Gothic","Noto Sans KR",Arial,sans-serif;
+      font-size:12px;
+    }
+    .wrap{
+      width:100%;
+      max-width:640px;
+      margin:0 auto;
+      padding:10px;
+      padding-left:max(10px, env(safe-area-inset-left));
+      padding-right:max(10px, env(safe-area-inset-right));
+      padding-top:max(10px, env(safe-area-inset-top));
+      padding-bottom:max(10px, env(safe-area-inset-bottom));
+    }
+    .card{
+      background:#fff;
+      border:1px solid #d9dee5;
+      border-radius:8px;
+      padding:10px;
+      margin-bottom:0;
+      box-shadow:0 2px 8px rgba(15,23,42,.035);
+    }
+    h1{margin:0;font-size:17px;letter-spacing:-.3px}
+    h2{margin:0;font-size:16px}
+
+    .head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:10px;
+    }
+
+    .back{
+      min-height:32px;
+      padding:0 9px;
+      border:1px solid #bfc9d5;
+      border-radius:6px;
+      background:#fff;
+      color:#334155;
+      font-size:12px;
+      font-weight:700;
+      cursor:pointer;
+      touch-action:manipulation;
+    }
+
+    .search-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:7px;
+      align-items:end;
+    }
+
+    .field > label{
+      display:block;
+      margin-bottom:5px;
+      font-size:13px;
+      font-weight:800;
+      color:#344154;
+    }
+
+    .period-box{
+      min-height:34px;
+      display:grid;
+      grid-template-columns:repeat(4, auto);
+      align-items:center;
+      justify-content:start;
+      gap:4px 8px;
+      padding:5px 7px;
+      border:1px solid #cbd5e1;
+      border-radius:6px;
+      background:#fffde8;
+      white-space:nowrap;
+    }
+
+    .period-option{
+      display:flex;
+      align-items:center;
+      gap:4px;
+      min-height:24px;
+      margin:0;
+      font-size:12px;
+      font-weight:700;
+      color:#334155;
+      cursor:pointer;
+      touch-action:manipulation;
+    }
+
+    .period-option input{
+      width:14px;
+      height:14px;
+      margin:0;
+      accent-color:#1f2937;
+      cursor:pointer;
+      flex:none;
+    }
+
+
+    .company-input{
+      width:100%;
+      min-height:34px;
+      border:1px solid #cbd5e1;
+      border-radius:6px;
+      padding:0 9px;
+      background:#fffde8;
+      color:#1f2937;
+      font-family:inherit;
+      font-size:13px;
+      outline:none;
+    }
+
+    .company-input:focus{
+      border-color:#64748b;
+    }
+
+    .company-input::placeholder{
+      color:#94a3b8;
+    }
+
+    /* 직접입력 가능한 풀다운 */
+    .combo{
+      position:relative;
+      width:100%;
+    }
+
+    .combo-button{
+      width:100%;
+      min-height:34px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      padding:0 9px;
+      padding-right:50px;
+      border:1px solid #cbd5e1;
+      border-radius:6px;
+      background:#fffde8;
+      color:#1f2937;
+      font-family:inherit;
+      font-size:13px;
+      cursor:pointer;
+      text-align:left;
+      touch-action:manipulation;
+    }
+
+    .combo-button:focus{
+      outline:none;
+      border-color:#64748b;
+    }
+
+
+    .combo-button{
+      position:relative;
+      padding-right:58px;
+    }
+
+    .combo-clear{
+      position:absolute;
+      right:26px;
+      top:50%;
+      transform:translateY(-50%);
+      width:18px;
+      height:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:0;
+      border-radius:50%;
+      background:#e5e7eb;
+      color:#475569;
+      font-size:11px;
+      font-weight:700;
+      line-height:1;
+      cursor:pointer;
+      z-index:2;
+      touch-action:manipulation;
+    }
+
+    .combo-clear:hover{
+      background:#d1d5db;
+    }
+
+    .combo-clear[hidden]{
+      display:none;
+    }
+
+    .combo-empty .combo-label{
+      color:#94a3b8;
+      font-weight:400;
+    }
+
+    .combo-arrow{
+      flex:none;
+      color:#64748b;
+      font-size:11px;
+    }
+
+    .combo-menu{
+      position:absolute;
+      top:37px;
+      left:0;
+      right:0;
+      z-index:50;
+      display:none;
+      background:#fff;
+      border:1px solid #cbd5e1;
+      border-radius:6px;
+      box-shadow:0 8px 22px rgba(15,23,42,.13);
+      overflow:hidden;
+    }
+
+    .combo.open .combo-menu{
+      display:block;
+    }
+
+    .combo-option{
+      width:100%;
+      min-height:34px;
+      padding:0 9px;
+      border:0;
+      border-bottom:1px solid #edf0f3;
+      background:#fff;
+      color:#1f2937;
+      font-family:inherit;
+      font-size:13px;
+      text-align:left;
+      cursor:pointer;
+      touch-action:manipulation;
+    }
+
+    .combo-option:hover{
+      background:#f5f7fa;
+    }
+
+    .combo-input-wrap{
+      padding:7px;
+      background:#f8fafc;
+    }
+
+    .combo-input{
+      width:100%;
+      min-height:32px;
+      border:1px solid #bfc9d5;
+      border-radius:5px;
+      padding:0 8px;
+      background:#fff;
+      color:#1f2937;
+      font-family:inherit;
+      font-size:13px;
+      outline:none;
+    }
+
+    .combo-input:focus{
+      border-color:#64748b;
+    }
+
+    .buttons{
+      grid-column:1 / -1;
+      display:grid;
+      grid-template-columns:.7fr 1fr 1.1fr;
+      gap:5px;
+      margin-top:2px;
+    }
+
+    button.primary, button.secondary, button.ai{
+      min-height:36px;
+      padding:0 7px;
+      border-radius:6px;
+      font-size:12px;
+      font-weight:800;
+      cursor:pointer;
+      white-space:nowrap;
+      touch-action:manipulation;
+    }
+
+    button.primary{
+      border:1px solid #1f2937;
+      background:#1f2937;
+      color:#fff;
+    }
+
+    button.ai{
+      border:1px solid #2563eb;
+      background:#2563eb;
+      color:#fff;
+    }
+
+    button.secondary{
+      border:1px solid #bfc9d5;
+      background:#fff;
+      color:#334155;
+    }
+
+    .result-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+
+    .status{
+      font-size:13px;
+      color:#64748b;
+      text-align:right;
+    }
+
+    .guide{
+      margin:0 0 14px;
+      padding:11px 13px;
+      border:1px solid #cfe0f7;
+      border-radius:7px;
+      background:#f6faff;
+      color:#365475;
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    .empty{
+      padding:34px 12px;
+      text-align:center;
+      color:#64748b;
+      font-size:12px;
+    }
+
+    .notice{
+      margin:12px 0 0;
+      color:#64748b;
+      font-size:12px;
+      line-height:1.65;
+    }
+
+    @media (max-width:1050px){
+      .search-grid{
+        grid-template-columns:1fr 1fr;
+      }
+      .buttons{
+        grid-column:1 / -1;
+        justify-content:flex-end;
+      }
+      .period-box{
+        flex-wrap:wrap;
+        height:auto;
+        min-height:34px;
+        padding:7px 10px;
+      }
+    }
+
+    @media (max-width:560px){
+      .wrap{padding:14px 10px}
+      .card{padding:14px}
+      .search-grid{grid-template-columns:1fr}
+      .buttons{grid-column:auto}
+      .head{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+    }
+  
+    /* 일반 스마트폰 */
+    @media (max-width:599px){
+      .wrap{max-width:100%}
+      .search-grid{grid-template-columns:1fr}
+      .buttons{grid-template-columns:.7fr 1fr 1.1fr}
+      .period-box{grid-template-columns:repeat(4, auto)}
+    }
+
+    /* 폴드 접은 화면 / 큰 스마트폰 */
+    @media (min-width:600px) and (max-width:899px){
+      .wrap{max-width:620px}
+      .search-grid{grid-template-columns:1fr 1fr}
+      .buttons{grid-column:1 / -1}
+    }
+
+    /* 폴드 펼친 화면 / 태블릿 */
+    @media (min-width:900px){
+      .wrap{max-width:760px}
+      .search-grid{
+        grid-template-columns:1.15fr 1fr 1fr;
+        gap:7px;
+      }
+      .buttons{
+        grid-column:1 / -1;
+        grid-template-columns:90px 1fr 1fr;
+      }
+    }
+
+    /* 아주 좁은 커버 화면 */
+    @media (max-width:360px){
+      .period-box{grid-template-columns:1fr 1fr}
+      .buttons{grid-template-columns:1fr}
+    }
+      .wrap{padding:8px}
+      .card{padding:11px}
+      h1{font-size:17px}
+      .period-box{
+        grid-template-columns:1fr;
+      }
+      .company-input,
+      .combo-button,
+      .combo-option,
+      .combo-input{
+        font-size:12px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+
+    <section class="card">
+      <div class="head">
+        <h1>구인공고 검색</h1>
+        <button class="back" type="button" onclick="window.close()">닫기</button>
+      </div>
+<div class="search-grid">
+
+        <!-- 검색기간 -->
+        <div class="field">
+          <label>검색기간</label>
+          <div class="period-box">
+            <label class="period-option">
+              <input type="radio" name="period" value="1m" checked>
+              <span>1달 이내</span>
+            </label>
+            <label class="period-option">
+              <input type="radio" name="period" value="2w">
+              <span>2주 이내</span>
+            </label>
+            <label class="period-option">
+              <input type="radio" name="period" value="1w">
+              <span>1주 이내</span>
+            </label>
+            <label class="period-option">
+              <input type="radio" name="period" value="today">
+              <span>당일</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 업체명: 선택 입력 -->
+        <div class="field">
+          <label for="companyName">업체명</label>
+          <input
+            id="companyName"
+            class="company-input"
+            type="text"
+            placeholder="예: 한화에어로스페이스">
+        </div>
+
+        <!-- 업종 -->
+        <div class="field">
+          <label>업종</label>
+          <div class="combo" id="industryCombo" data-value="제조업">
+            <button type="button" class="combo-button">
+              <span class="combo-label">제조업</span>
+              <span class="combo-clear" title="삭제">×</span>
+              <span class="combo-arrow">▼</span>
+            </button>
+            <div class="combo-menu">
+              <button type="button" class="combo-option" data-value="제조업">제조업</button>
+              <div class="combo-input-wrap">
+                <input type="text" class="combo-input" placeholder="직접 입력">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 지역 -->
+        <div class="field">
+          <label>지역</label>
+          <div class="combo" id="regionCombo" data-value="경남">
+            <button type="button" class="combo-button">
+              <span class="combo-label">경남</span>
+              <span class="combo-clear" title="삭제">×</span>
+              <span class="combo-arrow">▼</span>
+            </button>
+            <div class="combo-menu">
+              <button type="button" class="combo-option" data-value="경남">경남</button>
+              <button type="button" class="combo-option" data-value="창원">창원</button>
+              <button type="button" class="combo-option" data-value="김해">김해</button>
+              <button type="button" class="combo-option" data-value="함안">함안</button>
+              <button type="button" class="combo-option" data-value="진주">진주</button>
+              <button type="button" class="combo-option" data-value="사천">사천</button>
+              <div class="combo-input-wrap">
+                <input type="text" class="combo-input" placeholder="직접 입력">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 직무·자격 -->
+        <div class="field">
+          <label>직무·자격 키워드</label>
+          <div class="combo" id="keywordCombo" data-value="자동화설비">
+            <button type="button" class="combo-button">
+              <span class="combo-label">자동화설비</span>
+              <span class="combo-clear" title="삭제">×</span>
+              <span class="combo-arrow">▼</span>
+            </button>
+            <div class="combo-menu">
+              <button type="button" class="combo-option" data-value="자동화설비">자동화설비</button>
+              <button type="button" class="combo-option" data-value="전기분야">전기분야</button>
+              <button type="button" class="combo-option" data-value="3차원측정">3차원측정</button>
+              <div class="combo-input-wrap">
+                <input type="text" class="combo-input" placeholder="직접 입력">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button class="secondary" type="button" id="resetBtn">초기화</button>
+          <button class="primary" type="button" id="searchBtn">Google 검색</button>
+          <button class="ai" type="button" id="aiSearchBtn">Google AI 조사</button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const searchStatus = { textContent: '' };
+    const companyName = document.getElementById('companyName');
+    const searchBtn = document.getElementById('searchBtn');
+    const aiSearchBtn = document.getElementById('aiSearchBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    function setupCombo(id){
+      const combo = document.getElementById(id);
+      const button = combo.querySelector('.combo-button');
+      const label = combo.querySelector('.combo-label');
+      const clear = combo.querySelector('.combo-clear');
+      const options = combo.querySelectorAll('.combo-option');
+      const input = combo.querySelector('.combo-input');
+
+      function refreshClearState(){
+        const hasValue = Boolean((combo.dataset.value || '').trim());
+        clear.hidden = !hasValue;
+        combo.classList.toggle('combo-empty', !hasValue);
+        if(!hasValue){
+          label.textContent = '선택 안함';
+        }
+      }
+
+      clear.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        combo.dataset.value = '';
+        label.textContent = '선택 안함';
+        input.value = '';
+        combo.classList.remove('open');
+        refreshClearState();
+      });
+
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+
+        document.querySelectorAll('.combo.open').forEach(other => {
+          if(other !== combo) other.classList.remove('open');
+        });
+
+        combo.classList.toggle('open');
+
+        if(combo.classList.contains('open')){
+          setTimeout(() => input.focus(), 0);
+        }
+      });
+
+      options.forEach(option => {
+        option.addEventListener('click', () => {
+          const value = option.dataset.value;
+          combo.dataset.value = value;
+          label.textContent = value;
+          input.value = '';
+          combo.classList.remove('open');
+          refreshClearState();
+        });
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter'){
+          const value = input.value.trim();
+
+          if(value){
+            combo.dataset.value = value;
+            label.textContent = value;
+            combo.classList.remove('open');
+            refreshClearState();
+          }
+
+          e.preventDefault();
+        }
+      });
+
+      input.addEventListener('blur', () => {
+        const value = input.value.trim();
+
+        if(value){
+          combo.dataset.value = value;
+          label.textContent = value;
+          refreshClearState();
+        }
+      });
+
+      refreshClearState();
+      return combo;
+    }
+
+    const industryCombo = setupCombo('industryCombo');
+    const regionCombo = setupCombo('regionCombo');
+    const keywordCombo = setupCombo('keywordCombo');
+
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.combo.open').forEach(combo => {
+        combo.classList.remove('open');
+      });
+    });
+
+    document.querySelectorAll('.combo-menu').forEach(menu => {
+      menu.addEventListener('click', e => e.stopPropagation());
+    });
+
+    function pad2(n){
+      return String(n).padStart(2,'0');
+    }
+
+    function formatDate(date){
+      return date.getFullYear() + '-' +
+             pad2(date.getMonth() + 1) + '-' +
+             pad2(date.getDate());
+    }
+
+    function getTodayLocal(){
+      const now = new Date();
+      return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    }
+
+    function getSelectedPeriod(){
+      return document.querySelector('input[name="period"]:checked')?.value || '1m';
+    }
+
+    function getPeriodInfo(){
+      const today = getTodayLocal();
+      const start = new Date(today);
+      const period = getSelectedPeriod();
+      let label = '';
+
+      if(period === '1m'){
+        start.setMonth(start.getMonth() - 1);
+        label = '1달 이내';
+      }else if(period === '2w'){
+        start.setDate(start.getDate() - 14);
+        label = '2주 이내';
+      }else if(period === '1w'){
+        start.setDate(start.getDate() - 7);
+        label = '1주 이내';
+      }else{
+        label = '당일';
+      }
+
+      return {
+        startDate: formatDate(start),
+        todayDate: formatDate(today),
+        label
+      };
+    }
+
+    function commitComboInput(combo){
+      const input = combo.querySelector('.combo-input');
+      const label = combo.querySelector('.combo-label');
+      const value = input.value.trim();
+
+      if(value){
+        combo.dataset.value = value;
+        label.textContent = value;
+      }
+    }
+
+    function buildQuery(){
+      commitComboInput(industryCombo);
+      commitComboInput(regionCombo);
+      commitComboInput(keywordCombo);
+
+      const companyText = companyName.value.trim();
+      const industryText = industryCombo.dataset.value || '';
+      const regionText = regionCombo.dataset.value || '';
+      const keywordText = keywordCombo.dataset.value || '';
+      const periodInfo = getPeriodInfo();
+
+      const terms = [];
+
+      // 업체명이 입력되면 정확한 업체명 검색을 우선 적용
+      if(companyText) terms.push('"' + companyText.replace(/"/g, '') + '"');
+      if(regionText) terms.push(regionText);
+      if(industryText) terms.push(industryText);
+      if(keywordText) terms.push(keywordText);
+
+      terms.push('채용');
+
+      const tomorrow = getTodayLocal();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      terms.push('after:' + periodInfo.startDate);
+      terms.push('before:' + formatDate(tomorrow));
+
+      return {
+        query: terms.join(' '),
+        periodInfo,
+        companyText,
+        industryText,
+        regionText,
+        keywordText
+      };
+    }
+
+    function executeSearch(){
+      const result = buildQuery();
+
+      const googleUrl =
+        'https://www.google.com/search?q=' +
+        encodeURIComponent(result.query);
+
+      searchStatus.textContent =
+        'Google 검색 · ' +
+        result.periodInfo.label + ' · ' +
+        (result.companyText ? result.companyText + ' · ' : '') +
+        result.regionText + ' · ' +
+        result.industryText + ' · ' +
+        result.keywordText;
+
+      window.open(googleUrl, '_blank', 'noopener,noreferrer');
+    }
+
+    function buildAIQuestion(){
+      commitComboInput(industryCombo);
+      commitComboInput(regionCombo);
+      commitComboInput(keywordCombo);
+
+      const companyText = companyName.value.trim();
+      const industryText = industryCombo.dataset.value || '';
+      const regionText = regionCombo.dataset.value || '';
+      const keywordText = keywordCombo.dataset.value || '';
+      const periodInfo = getPeriodInfo();
+
+      const companyCondition = companyText
+        ? ' 업체명은 "' + companyText.replace(/"/g, '') + '"이며, 이 업체의 채용공고를 최우선으로 조사해줘. '
+        : '';
+
+      const question =
+        '오늘 기준 ' + periodInfo.label +
+        ' (' + periodInfo.startDate + ' ~ ' + periodInfo.todayDate + ')' +
+        ' 범위에서 구인공고를 조사해줘. ' +
+        companyCondition +
+        '지역은 ' + regionText + ', 업종은 ' + industryText +
+        ', 직무·자격은 ' + keywordText + ' 조건으로 조사해줘. ' +
+        '실제 채용 중이거나 지원 가능한 공고만 우선하고, ' +
+        '조건과 직접 관련 없는 교육, 학원, 뉴스, 블로그, 단순 회사소개는 제외해줘. ' +
+        '회사명, 모집직종, 근무지역, 경력, 학력, 급여, 게시일, 마감일, 출처, 원문 URL 순서로 정리해줘. ' +
+        '게시일과 마감일은 가능하면 원문 공고에서 확인하고, 이미 마감된 공고는 제외해줘. ' +
+        '확인되지 않은 정보는 추정하지 말고 확인 필요로 표시해줘.';
+
+      return {
+        question,
+        periodInfo,
+        companyText,
+        industryText,
+        regionText,
+        keywordText
+      };
+    }
+
+    function executeAISearch(){
+      const result = buildAIQuestion();
+
+      const aiUrl =
+        'https://www.google.com/search?udm=50&hl=ko&q=' +
+        encodeURIComponent(result.question);
+
+      searchStatus.textContent =
+        'Google AI 조사 · ' +
+        result.periodInfo.label + ' · ' +
+        (result.companyText ? result.companyText + ' · ' : '') +
+        result.regionText + ' · ' +
+        result.industryText + ' · ' +
+        result.keywordText;
+
+      window.open(aiUrl, '_blank', 'noopener,noreferrer');
+    }
+
+    function setComboDefault(combo, value){
+      combo.dataset.value = value;
+      combo.querySelector('.combo-label').textContent = value || '선택 안함';
+      combo.querySelector('.combo-input').value = '';
+      combo.classList.remove('open');
+      combo.classList.toggle('combo-empty', !value);
+
+      const clear = combo.querySelector('.combo-clear');
+      if(clear) clear.hidden = !value;
+    }
+
+    function resetForm(){
+      companyName.value = '';
+      setComboDefault(industryCombo, '제조업');
+      setComboDefault(regionCombo, '경남');
+      setComboDefault(keywordCombo, '자동화설비');
+
+      const defaultPeriod =
+        document.querySelector('input[name="period"][value="1m"]');
+
+      if(defaultPeriod) defaultPeriod.checked = true;
+
+      searchStatus.textContent = '검색조건을 확인하고 검색하세요.';
+    }
+
+    companyName.addEventListener('keydown', event => {
+      if(event.key === 'Enter'){
+        executeSearch();
+      }
+    });
+
+    searchBtn.addEventListener('click', executeSearch);
+    aiSearchBtn.addEventListener('click', executeAISearch);
+    resetBtn.addEventListener('click', resetForm);
+  </script>
+</body>
+</html>
