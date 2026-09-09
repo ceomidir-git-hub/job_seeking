@@ -53,6 +53,28 @@
       margin-bottom:12px;
     }
 
+    .title-row{
+      min-width:0;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex:1;
+    }
+
+    .title-row h1{
+      flex:none;
+    }
+
+    .search-warning{
+      color:#dc2626;
+      font-size:11px;
+      font-weight:800;
+      line-height:1.45;
+      letter-spacing:-.2px;
+      word-break:keep-all;
+    }
+
+
     .back{
       flex:none;
       min-width:58px;
@@ -341,14 +363,32 @@
         grid-template-columns:90px 1fr 1fr;
       }
     }
-  </style>
+  
+    @media (max-width:560px){
+      .head{
+        align-items:flex-start;
+      }
+      .title-row{
+        display:block;
+      }
+      .search-warning{
+        margin-top:5px;
+        font-size:11px;
+        line-height:1.45;
+      }
+    }
+
+</style>
 </head>
 
 <body>
   <main class="wrap">
     <section class="card">
       <div class="head">
-        <h1>구인공고 검색</h1>
+        <div class="title-row">
+          <h1>구인공고 검색</h1>
+          <div class="search-warning">경고 : 1회 조회 후 다시 조회하면 이전 회사는 검색이 안될 수도 있음(반드시 캡쳐할것)</div>
+        </div>
         <button class="back" type="button" onclick="window.close()">닫기</button>
       </div>
 
