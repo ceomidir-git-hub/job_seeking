@@ -688,6 +688,33 @@
       }
     }
 
+    function cleanGoogleTerm(value){
+      return String(value || '').replace(/"/g, '').trim();
+    }
+
+    function exactGoogleTerm(value){
+      const cleaned = cleanGoogleTerm(value);
+      return cleaned ? '"' + cleaned + '"' : '';
+    }
+
+    function buildGoogleKeywordGroup(keywordText){
+      const cleaned = cleanGoogleTerm(keywordText);
+      if(!cleaned) return '';
+
+      // UI에 쉼표로 구분되어 있는 키워드는 각각 독립 검색어로 OR 처리한다.
+      // 예: "전기, PLC" → ("전기" OR "PLC")
+      const parts = cleaned
+        .split(',')
+        .map(part => part.trim())
+        .filter(Boolean);
+
+      if(parts.length > 1){
+        return '(' + parts.map(exactGoogleTerm).join(' OR ') + ')';
+      }
+
+      return exactGoogleTerm(cleaned);
+    }
+
     function buildQuery(){
       commitComboInput(industryCombo);
       commitComboInput(regionCombo);
@@ -699,24 +726,47 @@
       const regionText = regionCombo.dataset.value || '';
       const keywordText = keywordCombo.dataset.value || '';
       const periodInfo = getPeriodInfo();
+
       const terms = [];
 
-      if(companyText) terms.push('"' + companyText.replace(/"/g, '') + '"');
-      if(careerType) terms.push(careerType);
-      if(regionText) terms.push(regionText);
-      if(industryText) terms.push(industryText);
-      if(keywordText) terms.push(keywordText);
+      // 1. 업체명: 입력한 경우 정확한 회사명으로 검색한다.
+      if(companyText){
+        terms.push(exactGoogleTerm(companyText));
+      }
 
-      // 채용공고에서 실제로 자주 사용되는 3개 표현을 OR로 묶어
-      // 한 표현만 사용할 때보다 검색 누락 가능성을 줄인다.
+      // 2. 지역: 화면에서 선택/입력한 지역명을 정확한 구문으로 고정한다.
+      if(regionText){
+        terms.push(exactGoogleTerm(regionText));
+      }
+
+      // 3. 경력구분: 사용자가 선택한 "신입" 또는 "경력"만 정확히 반영한다.
+      if(careerType){
+        terms.push(exactGoogleTerm(careerType));
+      }
+
+      // 4. 업종: 업체명 입력 시 기존 로직에 의해 빈칸이므로 검색식에서도 제외된다.
+      if(industryText){
+        terms.push(exactGoogleTerm(industryText));
+      }
+
+      // 5. 직무·자격:
+      //    "전기, PLC"처럼 쉼표로 구분된 값은 AND가 아니라 OR로 검색한다.
+      const keywordGroup = buildGoogleKeywordGroup(keywordText);
+      if(keywordGroup){
+        terms.push(keywordGroup);
+      }
+
+      // 6. 구인공고 성격을 나타내는 검색어는 OR로 묶는다.
       terms.push('(채용 OR 모집 OR 구인)');
 
-      // 구인공고와 직접 관련이 낮은 결과는 일반 Google 검색에서도 제외한다.
-      terms.push('-교육');
-      terms.push('-학원');
-      terms.push('-뉴스');
-      terms.push('-블로그');
+      // 7. 실제 첨부 검색결과에서 확인된 SNS성 결과를 도메인 단위로 제외한다.
+      //    일반 단어(-교육/-뉴스 등)를 제외하지 않아 정상 채용공고의 과도한 누락을 줄인다.
+      terms.push('-site:threads.net');
+      terms.push('-site:instagram.com');
+      terms.push('-site:facebook.com');
 
+      // 8. 검색기간은 Google 문서 업데이트 날짜 필터이다.
+      //    화면의 시작일을 포함하도록 전날을 after 경계값으로 사용한다.
       terms.push('after:' + periodInfo.googleAfterDate);
       terms.push('before:' + periodInfo.googleBeforeDate);
 
@@ -733,6 +783,7 @@
 
     function executeSearch(){
       const result = buildQuery();
+
       const googleUrl =
         'https://www.google.com/search?q=' +
         encodeURIComponent(result.query);
@@ -742,11 +793,13 @@
         result.periodInfo.label + ' · ' +
         (result.careerType ? result.careerType + ' · ' : '') +
         (result.companyText ? result.companyText + ' · ' : '') +
-        result.regionText + ' · ' +
-        result.industryText + ' · ' +
+        (result.regionText ? result.regionText + ' · ' : '') +
+        (result.industryText ? result.industryText + ' · ' : '') +
         result.keywordText;
 
-      window.open(googleUrl, '_blank', 'noopener,noreferrer');
+      // 모바일 인앱 브라우저에서도 안정적으로 동작하도록
+      // 새 창(_blank)이 아니라 현재 창에서 Google 검색으로 이동한다.
+      window.location.href = googleUrl;
     }
 
     function buildAIQuestion(){
