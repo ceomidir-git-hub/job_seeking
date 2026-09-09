@@ -67,7 +67,7 @@
 
     .search-warning{
       color:#dc2626;
-      font-size:11px;
+      font-size:11.055px;
       font-weight:800;
       line-height:1.45;
       letter-spacing:-.2px;
@@ -120,7 +120,7 @@
       background:#fffde8;
     }
 
-    .period-box{grid-template-columns:repeat(4, auto); justify-content:start}
+    .period-box{grid-template-columns:repeat(3, auto); justify-content:start}
     .career-box{grid-template-columns:repeat(2, minmax(0,1fr))}
 
     .radio-option{
@@ -373,7 +373,7 @@
       }
       .search-warning{
         margin-top:5px;
-        font-size:11px;
+        font-size:11.055px;
         line-height:1.45;
       }
     }
@@ -398,16 +398,12 @@
           <label>검색기간</label>
           <div class="radio-box period-box">
             <label class="radio-option">
-              <input type="radio" name="period" value="1m" checked>
-              <span>1달 이내</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="period" value="2w">
+              <input type="radio" name="period" value="2w" checked>
               <span>2주 이내</span>
             </label>
             <label class="radio-option">
               <input type="radio" name="period" value="1w">
-              <span>1주 이내</span>
+              <span>1주일 이내</span>
             </label>
             <label class="radio-option">
               <input type="radio" name="period" value="today">
@@ -488,9 +484,9 @@
         <!-- 직무·자격 -->
         <div class="field">
           <label>직무·자격 키워드</label>
-          <div class="combo" id="keywordCombo" data-value="자동화 설비">
+          <div class="combo" id="keywordCombo" data-value="전기, PLC">
             <button type="button" class="combo-button">
-              <span class="combo-label">자동화 설비</span>
+              <span class="combo-label">전기, PLC</span>
               <span class="combo-clear" title="삭제">×</span>
               <span class="combo-arrow">▼</span>
             </button>
@@ -627,7 +623,7 @@
     }
 
     function getSelectedPeriod(){
-      return document.querySelector('input[name="period"]:checked')?.value || '1m';
+      return document.querySelector('input[name="period"]:checked')?.value || '2w';
     }
 
     function getSelectedCareerType(){
@@ -640,15 +636,12 @@
       const period = getSelectedPeriod();
       let label = '';
 
-      if(period === '1m'){
-        start.setMonth(start.getMonth() - 1);
-        label = '1달 이내';
-      }else if(period === '2w'){
+      if(period === '2w'){
         start.setDate(start.getDate() - 14);
         label = '2주 이내';
       }else if(period === '1w'){
         start.setDate(start.getDate() - 7);
-        label = '1주 이내';
+        label = '1주일 이내';
       }else{
         label = '당일';
       }
@@ -802,10 +795,10 @@
       companyName.value = '';
       setComboDefault(industryCombo, '제조업');
       setComboDefault(regionCombo, '창원');
-      setComboDefault(keywordCombo, '자동화 설비');
+      setComboDefault(keywordCombo, '전기, PLC');
 
       const defaultPeriod =
-        document.querySelector('input[name="period"][value="1m"]');
+        document.querySelector('input[name="period"][value="2w"]');
       if(defaultPeriod) defaultPeriod.checked = true;
 
       document.querySelectorAll('input[name="careerType"]').forEach(input => {
