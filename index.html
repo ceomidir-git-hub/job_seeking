@@ -153,7 +153,7 @@
       align-items:center;
       justify-content:space-between;
       gap:8px;
-      padding:0 58px 0 10px;
+      padding:0 82px 0 10px;
       border:1px solid #cbd5e1;
       border-radius:7px;
       background:#fffde8;
@@ -172,27 +172,30 @@
 
     .combo-clear{
       position:absolute;
-      right:28px;
+      right:42px;
       top:50%;
       transform:translateY(-50%);
-      width:21px;
-      height:21px;
+      width:22px;
+      height:22px;
       display:flex;
       align-items:center;
       justify-content:center;
-      border:0;
+      border:1px solid #fecaca;
       border-radius:50%;
-      background:#e5e7eb;
-      color:#475569;
-      font-size:12px;
-      font-weight:700;
+      background:#fff1f2;
+      color:#dc2626;
+      font-size:14px;
+      font-weight:900;
       line-height:1;
       cursor:pointer;
       z-index:2;
       touch-action:manipulation;
     }
 
-    .combo-clear:hover{background:#d1d5db}
+    .combo-clear:hover{
+      background:#fee2e2;
+      border-color:#fca5a5;
+    }
     .combo-clear[hidden]{display:none}
 
     .combo-empty .combo-label{
@@ -205,8 +208,10 @@
       right:10px;
       top:50%;
       transform:translateY(-50%);
-      color:#64748b;
-      font-size:11px;
+      color:#2563eb;
+      font-size:15px;
+      font-weight:900;
+      line-height:1;
       pointer-events:none;
     }
 
@@ -443,16 +448,17 @@
         <!-- 직무·자격 -->
         <div class="field">
           <label>직무·자격 키워드</label>
-          <div class="combo" id="keywordCombo" data-value="자동화설비">
+          <div class="combo" id="keywordCombo" data-value="자동화 설비">
             <button type="button" class="combo-button">
-              <span class="combo-label">자동화설비</span>
+              <span class="combo-label">자동화 설비</span>
               <span class="combo-clear" title="삭제">×</span>
               <span class="combo-arrow">▼</span>
             </button>
             <div class="combo-menu">
-              <button type="button" class="combo-option" data-value="자동화설비">자동화설비</button>
-              <button type="button" class="combo-option" data-value="전기분야">전기분야</button>
-              <button type="button" class="combo-option" data-value="3차원측정">3차원측정</button>
+              <button type="button" class="combo-option" data-value="자동화 설비">자동화 설비</button>
+              <button type="button" class="combo-option" data-value="전기, PLC">전기, PLC</button>
+              <button type="button" class="combo-option" data-value="3차원 측정">3차원 측정</button>
+              <button type="button" class="combo-option" data-value="5축 가공">5축 가공</button>
               <div class="combo-input-wrap">
                 <input type="text" class="combo-input" placeholder="직접 입력">
               </div>
@@ -756,7 +762,7 @@
       companyName.value = '';
       setComboDefault(industryCombo, '제조업');
       setComboDefault(regionCombo, '창원');
-      setComboDefault(keywordCombo, '자동화설비');
+      setComboDefault(keywordCombo, '자동화 설비');
 
       const defaultPeriod =
         document.querySelector('input[name="period"][value="1m"]');
