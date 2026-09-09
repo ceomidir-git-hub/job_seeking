@@ -6,6 +6,9 @@
   <title>구인공고 검색</title>
   <style>
     *{box-sizing:border-box}
+
+    html{-webkit-text-size-adjust:100%}
+
     body{
       margin:0;
       min-height:100vh;
@@ -13,11 +16,12 @@
       background:#f4f6f8;
       color:#1f2937;
       font-family:"Malgun Gothic","Noto Sans KR",Arial,sans-serif;
-      font-size:12px;
+      font-size:13px;
     }
+
     .wrap{
       width:100%;
-      max-width:640px;
+      max-width:760px;
       margin:0 auto;
       padding:10px;
       padding-left:max(10px, env(safe-area-inset-left));
@@ -25,33 +29,41 @@
       padding-top:max(10px, env(safe-area-inset-top));
       padding-bottom:max(10px, env(safe-area-inset-bottom));
     }
+
     .card{
       background:#fff;
       border:1px solid #d9dee5;
-      border-radius:8px;
-      padding:10px;
-      margin-bottom:0;
+      border-radius:10px;
+      padding:12px;
       box-shadow:0 2px 8px rgba(15,23,42,.035);
     }
-    h1{margin:0;font-size:17px;letter-spacing:-.3px}
-    h2{margin:0;font-size:16px}
+
+    h1{
+      margin:0;
+      font-size:18px;
+      line-height:1.3;
+      letter-spacing:-.3px;
+    }
 
     .head{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:12px;
-      margin-bottom:10px;
+      gap:10px;
+      margin-bottom:12px;
     }
 
     .back{
-      min-height:32px;
-      padding:0 9px;
+      flex:none;
+      min-width:58px;
+      min-height:40px;
+      padding:0 12px;
       border:1px solid #bfc9d5;
-      border-radius:6px;
+      border-radius:7px;
       background:#fff;
       color:#334155;
-      font-size:12px;
+      font-family:inherit;
+      font-size:13px;
       font-weight:700;
       cursor:pointer;
       touch-action:manipulation;
@@ -60,97 +72,94 @@
     .search-grid{
       display:grid;
       grid-template-columns:1fr;
-      gap:7px;
+      gap:10px;
       align-items:end;
     }
 
+    .field{min-width:0}
+
     .field > label{
       display:block;
-      margin-bottom:5px;
-      font-size:13px;
+      margin-bottom:6px;
+      font-size:14px;
+      line-height:1.25;
       font-weight:800;
       color:#344154;
     }
 
-    .period-box{
-      min-height:34px;
+    .radio-box{
+      min-height:44px;
       display:grid;
-      grid-template-columns:repeat(4, auto);
       align-items:center;
-      justify-content:start;
-      gap:4px 8px;
-      padding:5px 7px;
+      gap:4px 10px;
+      padding:6px 9px;
       border:1px solid #cbd5e1;
-      border-radius:6px;
+      border-radius:7px;
       background:#fffde8;
-      white-space:nowrap;
     }
 
-    .period-option{
+    .period-box{grid-template-columns:repeat(4, auto); justify-content:start}
+    .career-box{grid-template-columns:repeat(2, minmax(0,1fr))}
+
+    .radio-option{
       display:flex;
       align-items:center;
-      gap:4px;
-      min-height:24px;
+      gap:6px;
+      min-height:30px;
       margin:0;
-      font-size:12px;
+      font-size:13px;
       font-weight:700;
       color:#334155;
       cursor:pointer;
       touch-action:manipulation;
+      white-space:nowrap;
     }
 
-    .period-option input{
-      width:14px;
-      height:14px;
+    .radio-option input{
+      width:17px;
+      height:17px;
       margin:0;
       accent-color:#1f2937;
       cursor:pointer;
       flex:none;
     }
 
-
     .company-input{
       width:100%;
-      min-height:34px;
+      min-height:44px;
       border:1px solid #cbd5e1;
-      border-radius:6px;
-      padding:0 9px;
+      border-radius:7px;
+      padding:0 10px;
       background:#fffde8;
       color:#1f2937;
       font-family:inherit;
-      font-size:13px;
+      font-size:14px;
       outline:none;
     }
 
-    .company-input:focus{
-      border-color:#64748b;
-    }
+    .company-input:focus{border-color:#64748b}
+    .company-input::placeholder{color:#94a3b8}
 
-    .company-input::placeholder{
-      color:#94a3b8;
-    }
-
-    /* 직접입력 가능한 풀다운 */
     .combo{
       position:relative;
       width:100%;
     }
 
     .combo-button{
+      position:relative;
       width:100%;
-      min-height:34px;
+      min-height:44px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:8px;
-      padding:0 9px;
-      padding-right:50px;
+      padding:0 58px 0 10px;
       border:1px solid #cbd5e1;
-      border-radius:6px;
+      border-radius:7px;
       background:#fffde8;
       color:#1f2937;
       font-family:inherit;
-      font-size:13px;
+      font-size:14px;
       cursor:pointer;
       text-align:left;
       touch-action:manipulation;
@@ -161,19 +170,13 @@
       border-color:#64748b;
     }
 
-
-    .combo-button{
-      position:relative;
-      padding-right:58px;
-    }
-
     .combo-clear{
       position:absolute;
-      right:26px;
+      right:28px;
       top:50%;
       transform:translateY(-50%);
-      width:18px;
-      height:18px;
+      width:21px;
+      height:21px;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -181,7 +184,7 @@
       border-radius:50%;
       background:#e5e7eb;
       color:#475569;
-      font-size:11px;
+      font-size:12px;
       font-weight:700;
       line-height:1;
       cursor:pointer;
@@ -189,13 +192,8 @@
       touch-action:manipulation;
     }
 
-    .combo-clear:hover{
-      background:#d1d5db;
-    }
-
-    .combo-clear[hidden]{
-      display:none;
-    }
+    .combo-clear:hover{background:#d1d5db}
+    .combo-clear[hidden]{display:none}
 
     .combo-empty .combo-label{
       color:#94a3b8;
@@ -203,83 +201,85 @@
     }
 
     .combo-arrow{
-      flex:none;
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
       color:#64748b;
       font-size:11px;
+      pointer-events:none;
     }
 
     .combo-menu{
       position:absolute;
-      top:37px;
+      top:47px;
       left:0;
       right:0;
       z-index:50;
       display:none;
       background:#fff;
       border:1px solid #cbd5e1;
-      border-radius:6px;
+      border-radius:7px;
       box-shadow:0 8px 22px rgba(15,23,42,.13);
       overflow:hidden;
     }
 
-    .combo.open .combo-menu{
-      display:block;
-    }
+    .combo.open .combo-menu{display:block}
 
     .combo-option{
       width:100%;
-      min-height:34px;
-      padding:0 9px;
+      min-height:42px;
+      padding:0 10px;
       border:0;
       border-bottom:1px solid #edf0f3;
       background:#fff;
       color:#1f2937;
       font-family:inherit;
-      font-size:13px;
+      font-size:14px;
       text-align:left;
       cursor:pointer;
       touch-action:manipulation;
     }
 
-    .combo-option:hover{
-      background:#f5f7fa;
-    }
+    .combo-option:hover{background:#f5f7fa}
 
     .combo-input-wrap{
-      padding:7px;
+      padding:8px;
       background:#f8fafc;
     }
 
     .combo-input{
       width:100%;
-      min-height:32px;
+      min-height:40px;
       border:1px solid #bfc9d5;
-      border-radius:5px;
-      padding:0 8px;
+      border-radius:6px;
+      padding:0 9px;
       background:#fff;
       color:#1f2937;
       font-family:inherit;
-      font-size:13px;
+      font-size:14px;
       outline:none;
     }
 
-    .combo-input:focus{
-      border-color:#64748b;
-    }
+    .combo-input:focus{border-color:#64748b}
 
     .buttons{
       grid-column:1 / -1;
       display:grid;
-      grid-template-columns:.7fr 1fr 1.1fr;
-      gap:5px;
+      grid-template-columns:.72fr 1fr 1.12fr;
+      gap:6px;
       margin-top:2px;
     }
 
-    button.primary, button.secondary, button.ai{
-      min-height:36px;
+    button.primary,
+    button.secondary,
+    button.ai{
+      min-width:0;
+      min-height:44px;
       padding:0 7px;
-      border-radius:6px;
-      font-size:12px;
+      border-radius:7px;
+      font-family:inherit;
+      font-size:13px;
       font-weight:800;
       cursor:pointer;
       white-space:nowrap;
@@ -304,151 +304,84 @@
       color:#334155;
     }
 
-    .result-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:10px;
-    }
-
-    .status{
-      font-size:13px;
-      color:#64748b;
-      text-align:right;
-    }
-
-    .guide{
-      margin:0 0 14px;
-      padding:11px 13px;
-      border:1px solid #cfe0f7;
-      border-radius:7px;
-      background:#f6faff;
-      color:#365475;
-      font-size:13px;
-      line-height:1.6;
-    }
-
-    .empty{
-      padding:34px 12px;
-      text-align:center;
-      color:#64748b;
-      font-size:12px;
-    }
-
-    .notice{
-      margin:12px 0 0;
-      color:#64748b;
-      font-size:12px;
-      line-height:1.65;
-    }
-
-    @media (max-width:1050px){
-      .search-grid{
-        grid-template-columns:1fr 1fr;
-      }
-      .buttons{
-        grid-column:1 / -1;
-        justify-content:flex-end;
-      }
-      .period-box{
-        flex-wrap:wrap;
-        height:auto;
-        min-height:34px;
-        padding:7px 10px;
-      }
-    }
-
-    @media (max-width:560px){
-      .wrap{padding:14px 10px}
-      .card{padding:14px}
-      .search-grid{grid-template-columns:1fr}
-      .buttons{grid-column:auto}
-      .head{
-        flex-direction:column;
-        align-items:flex-start;
-      }
-    }
-  
-    /* 일반 스마트폰 */
+    /* 스마트폰: 한 열, 검색기간 2x2 */
     @media (max-width:599px){
-      .wrap{max-width:100%}
-      .search-grid{grid-template-columns:1fr}
-      .buttons{grid-template-columns:.7fr 1fr 1.1fr}
-      .period-box{grid-template-columns:repeat(4, auto)}
+      .wrap{max-width:100%; padding:8px}
+      .card{padding:11px}
+      .search-grid{grid-template-columns:1fr; gap:9px}
+      .period-box{grid-template-columns:1fr 1fr; justify-content:stretch}
+      .buttons{grid-column:auto}
     }
 
-    /* 폴드 접은 화면 / 큰 스마트폰 */
+    /* 매우 좁은 스마트폰 / 폴드 커버 */
+    @media (max-width:340px){
+      .buttons{grid-template-columns:.72fr 1fr}
+      .buttons .ai{grid-column:1 / -1}
+      .radio-option{font-size:12px}
+    }
+
+    /* 폴드 펼침 / 소형 태블릿 */
     @media (min-width:600px) and (max-width:899px){
-      .wrap{max-width:620px}
+      .wrap{max-width:680px}
       .search-grid{grid-template-columns:1fr 1fr}
       .buttons{grid-column:1 / -1}
     }
 
-    /* 폴드 펼친 화면 / 태블릿 */
+    /* 태블릿·PC */
     @media (min-width:900px){
       .wrap{max-width:760px}
-      .search-grid{
-        grid-template-columns:1.15fr 1fr 1fr;
-        gap:7px;
-      }
+      .search-grid{grid-template-columns:1.15fr 1fr 1fr}
       .buttons{
         grid-column:1 / -1;
         grid-template-columns:90px 1fr 1fr;
       }
     }
-
-    /* 아주 좁은 커버 화면 */
-    @media (max-width:360px){
-      .period-box{grid-template-columns:1fr 1fr}
-      .buttons{grid-template-columns:1fr}
-    }
-      .wrap{padding:8px}
-      .card{padding:11px}
-      h1{font-size:17px}
-      .period-box{
-        grid-template-columns:1fr;
-      }
-      .company-input,
-      .combo-button,
-      .combo-option,
-      .combo-input{
-        font-size:12px;
-      }
-    }
-
   </style>
 </head>
 
 <body>
   <main class="wrap">
-
     <section class="card">
       <div class="head">
         <h1>구인공고 검색</h1>
         <button class="back" type="button" onclick="window.close()">닫기</button>
       </div>
-<div class="search-grid">
 
+      <div class="search-grid">
         <!-- 검색기간 -->
         <div class="field">
           <label>검색기간</label>
-          <div class="period-box">
-            <label class="period-option">
+          <div class="radio-box period-box">
+            <label class="radio-option">
               <input type="radio" name="period" value="1m" checked>
               <span>1달 이내</span>
             </label>
-            <label class="period-option">
+            <label class="radio-option">
               <input type="radio" name="period" value="2w">
               <span>2주 이내</span>
             </label>
-            <label class="period-option">
+            <label class="radio-option">
               <input type="radio" name="period" value="1w">
               <span>1주 이내</span>
             </label>
-            <label class="period-option">
+            <label class="radio-option">
               <input type="radio" name="period" value="today">
               <span>당일</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 신입/경력: 사용자가 선택할 때만 검색조건에 반영 -->
+        <div class="field">
+          <label>경력구분</label>
+          <div class="radio-box career-box">
+            <label class="radio-option">
+              <input type="radio" name="careerType" value="신입">
+              <span>신입</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="careerType" value="경력">
+              <span>경력</span>
             </label>
           </div>
         </div>
@@ -484,21 +417,24 @@
         <!-- 지역 -->
         <div class="field">
           <label>지역</label>
-          <div class="combo" id="regionCombo" data-value="경남">
+          <div class="combo" id="regionCombo" data-value="창원">
             <button type="button" class="combo-button">
-              <span class="combo-label">경남</span>
+              <span class="combo-label">창원</span>
               <span class="combo-clear" title="삭제">×</span>
               <span class="combo-arrow">▼</span>
             </button>
             <div class="combo-menu">
               <button type="button" class="combo-option" data-value="경남">경남</button>
-              <button type="button" class="combo-option" data-value="창원">창원</button>
               <button type="button" class="combo-option" data-value="김해">김해</button>
-              <button type="button" class="combo-option" data-value="함안">함안</button>
-              <button type="button" class="combo-option" data-value="진주">진주</button>
+              <button type="button" class="combo-option" data-value="부산">부산</button>
               <button type="button" class="combo-option" data-value="사천">사천</button>
+              <button type="button" class="combo-option" data-value="울산">울산</button>
+              <button type="button" class="combo-option" data-value="진주">진주</button>
+              <button type="button" class="combo-option" data-value="창원">창원</button>
+              <button type="button" class="combo-option" data-value="포항">포항</button>
+              <button type="button" class="combo-option" data-value="함안">함안</button>
               <div class="combo-input-wrap">
-                <input type="text" class="combo-input" placeholder="직접 입력">
+                <input type="text" class="combo-input" placeholder="직접 입력 (예: 양산)">
               </div>
             </div>
           </div>
@@ -529,10 +465,8 @@
           <button class="primary" type="button" id="searchBtn">Google 검색</button>
           <button class="ai" type="button" id="aiSearchBtn">Google AI 조사</button>
         </div>
-
       </div>
     </section>
-
   </main>
 
   <script>
@@ -562,7 +496,6 @@
       clear.addEventListener('click', (e) => {
         e.stopPropagation();
         e.preventDefault();
-
         combo.dataset.value = '';
         label.textContent = '선택 안함';
         input.value = '';
@@ -572,13 +505,10 @@
 
       button.addEventListener('click', (e) => {
         e.stopPropagation();
-
         document.querySelectorAll('.combo.open').forEach(other => {
           if(other !== combo) other.classList.remove('open');
         });
-
         combo.classList.toggle('open');
-
         if(combo.classList.contains('open')){
           setTimeout(() => input.focus(), 0);
         }
@@ -598,21 +528,18 @@
       input.addEventListener('keydown', (e) => {
         if(e.key === 'Enter'){
           const value = input.value.trim();
-
           if(value){
             combo.dataset.value = value;
             label.textContent = value;
             combo.classList.remove('open');
             refreshClearState();
           }
-
           e.preventDefault();
         }
       });
 
       input.addEventListener('blur', () => {
         const value = input.value.trim();
-
         if(value){
           combo.dataset.value = value;
           label.textContent = value;
@@ -657,6 +584,10 @@
       return document.querySelector('input[name="period"]:checked')?.value || '1m';
     }
 
+    function getSelectedCareerType(){
+      return document.querySelector('input[name="careerType"]:checked')?.value || '';
+    }
+
     function getPeriodInfo(){
       const today = getTodayLocal();
       const start = new Date(today);
@@ -687,7 +618,6 @@
       const input = combo.querySelector('.combo-input');
       const label = combo.querySelector('.combo-label');
       const value = input.value.trim();
-
       if(value){
         combo.dataset.value = value;
         label.textContent = value;
@@ -700,24 +630,22 @@
       commitComboInput(keywordCombo);
 
       const companyText = companyName.value.trim();
+      const careerType = getSelectedCareerType();
       const industryText = industryCombo.dataset.value || '';
       const regionText = regionCombo.dataset.value || '';
       const keywordText = keywordCombo.dataset.value || '';
       const periodInfo = getPeriodInfo();
-
       const terms = [];
 
-      // 업체명이 입력되면 정확한 업체명 검색을 우선 적용
       if(companyText) terms.push('"' + companyText.replace(/"/g, '') + '"');
+      if(careerType) terms.push(careerType);
       if(regionText) terms.push(regionText);
       if(industryText) terms.push(industryText);
       if(keywordText) terms.push(keywordText);
-
       terms.push('채용');
 
       const tomorrow = getTodayLocal();
       tomorrow.setDate(tomorrow.getDate() + 1);
-
       terms.push('after:' + periodInfo.startDate);
       terms.push('before:' + formatDate(tomorrow));
 
@@ -725,6 +653,7 @@
         query: terms.join(' '),
         periodInfo,
         companyText,
+        careerType,
         industryText,
         regionText,
         keywordText
@@ -733,7 +662,6 @@
 
     function executeSearch(){
       const result = buildQuery();
-
       const googleUrl =
         'https://www.google.com/search?q=' +
         encodeURIComponent(result.query);
@@ -741,6 +669,7 @@
       searchStatus.textContent =
         'Google 검색 · ' +
         result.periodInfo.label + ' · ' +
+        (result.careerType ? result.careerType + ' · ' : '') +
         (result.companyText ? result.companyText + ' · ' : '') +
         result.regionText + ' · ' +
         result.industryText + ' · ' +
@@ -755,6 +684,7 @@
       commitComboInput(keywordCombo);
 
       const companyText = companyName.value.trim();
+      const careerType = getSelectedCareerType();
       const industryText = industryCombo.dataset.value || '';
       const regionText = regionCombo.dataset.value || '';
       const keywordText = keywordCombo.dataset.value || '';
@@ -764,11 +694,16 @@
         ? ' 업체명은 "' + companyText.replace(/"/g, '') + '"이며, 이 업체의 채용공고를 최우선으로 조사해줘. '
         : '';
 
+      const careerCondition = careerType
+        ? '채용 경력구분은 ' + careerType + ' 조건으로 조사해줘. '
+        : '';
+
       const question =
         '오늘 기준 ' + periodInfo.label +
         ' (' + periodInfo.startDate + ' ~ ' + periodInfo.todayDate + ')' +
         ' 범위에서 구인공고를 조사해줘. ' +
         companyCondition +
+        careerCondition +
         '지역은 ' + regionText + ', 업종은 ' + industryText +
         ', 직무·자격은 ' + keywordText + ' 조건으로 조사해줘. ' +
         '실제 채용 중이거나 지원 가능한 공고만 우선하고, ' +
@@ -781,6 +716,7 @@
         question,
         periodInfo,
         companyText,
+        careerType,
         industryText,
         regionText,
         keywordText
@@ -789,7 +725,6 @@
 
     function executeAISearch(){
       const result = buildAIQuestion();
-
       const aiUrl =
         'https://www.google.com/search?udm=50&hl=ko&q=' +
         encodeURIComponent(result.question);
@@ -797,6 +732,7 @@
       searchStatus.textContent =
         'Google AI 조사 · ' +
         result.periodInfo.label + ' · ' +
+        (result.careerType ? result.careerType + ' · ' : '') +
         (result.companyText ? result.companyText + ' · ' : '') +
         result.regionText + ' · ' +
         result.industryText + ' · ' +
@@ -819,16 +755,27 @@
     function resetForm(){
       companyName.value = '';
       setComboDefault(industryCombo, '제조업');
-      setComboDefault(regionCombo, '경남');
+      setComboDefault(regionCombo, '창원');
       setComboDefault(keywordCombo, '자동화설비');
 
       const defaultPeriod =
         document.querySelector('input[name="period"][value="1m"]');
-
       if(defaultPeriod) defaultPeriod.checked = true;
+
+      document.querySelectorAll('input[name="careerType"]').forEach(input => {
+        input.checked = false;
+      });
 
       searchStatus.textContent = '검색조건을 확인하고 검색하세요.';
     }
+
+    // 업체명을 입력하면 업종은 자동으로 빈칸 처리한다.
+    // 이후 사용자가 필요하면 업종을 다시 선택하거나 직접 입력할 수 있다.
+    companyName.addEventListener('input', () => {
+      if(companyName.value.trim()){
+        setComboDefault(industryCombo, '');
+      }
+    });
 
     companyName.addEventListener('keydown', event => {
       if(event.key === 'Enter'){
