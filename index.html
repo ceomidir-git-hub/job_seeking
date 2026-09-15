@@ -511,17 +511,15 @@
         <!-- 직무·자격 -->
         <div class="field">
           <label>직무·자격 키워드</label>
-          <div class="combo" id="keywordCombo" data-value="반도체, PLC, 전기">
+          <div class="combo" id="keywordCombo" data-value="반도체, PLC">
             <button type="button" class="combo-button">
-              <span class="combo-label">반도체, PLC, 전기</span>
+              <span class="combo-label">반도체, PLC</span>
               <span class="combo-clear" title="삭제">×</span>
               <span class="combo-arrow">▼</span>
             </button>
             <div class="combo-menu">
-              <button type="button" class="combo-option" data-value="반도체, PLC, 전기">반도체, PLC, 전기</button>
-              <button type="button" class="combo-option" data-value="반도체">반도체</button>
-              <button type="button" class="combo-option" data-value="PLC">PLC</button>
-              <button type="button" class="combo-option" data-value="전기">전기</button>
+              <button type="button" class="combo-option" data-value="반도체, PLC">반도체, PLC</button>
+              <button type="button" class="combo-option" data-value="전기, PLC">전기, PLC</button>
               <div class="combo-input-wrap">
                 <input type="text" class="combo-input" placeholder="직접 입력">
               </div>
@@ -962,7 +960,7 @@
       companyName.value = '';
       setComboDefault(industryCombo, '제조업');
       setComboDefault(regionCombo, '경남');
-      setComboDefault(keywordCombo, '반도체, PLC, 전기');
+      setComboDefault(keywordCombo, '반도체, PLC');
 
       const defaultPeriod =
         document.querySelector('input[name="period"][value="2w"]');
